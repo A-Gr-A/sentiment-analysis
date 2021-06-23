@@ -1,2 +1,3 @@
 #exclude all datasets
 *.csv
+__pycache__
