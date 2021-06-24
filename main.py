@@ -1,26 +1,28 @@
-from flask import Flask,request, jsonify, make_response
-app = Flask(__name__)
-@app.route("/")
-def index():
-    jsonResp = {'jack': 4098, 'sape': 4139}
-    print("sendddd")
-    print(jsonify(jsonResp))
-    return jsonify(jsonResp)
-
-@app.route("/api",methods=['GET','POST'])
-def methodhanlers():
-   if request.method =='GET':
-      print("in get request")
-      return {
-         "user":"guest",
-         "id":1,
-         "title":"backend server"
-      }
-   if request.method == 'POST':
-      print('in post request')
-      print(type(request.json))
-      print(request.json)
-      return jsonify({"result":"hello there as a response"})
+from flask import Flask
   
+# Flask constructor takes the name of 
+# current module (__name__) as argument.
+app = Flask(__name__)
+  
+# The route() function of the Flask class is a decorator, 
+# which tells the application which URL should call 
+# the associated function.
+@app.route('/')
+# ‘/’ URL is bound with hello_world() function.
+def hello_world():
+    return 'Hello World'
+
+@app.route('/api') 
+def api():
+    return {
+        'status':'running',
+        'title':'/api',
+        'plsrunlox':3
+    } 
+  
+# main driver function
 if __name__ == '__main__':
-   app.run(debug = True)
+  
+    # run() method of Flask class runs the application 
+    # on the local development server.
+    app.run(debug=True)

@@ -1,7 +1,7 @@
 import logo from './assets/phone.svg';
 import './App.css';
 import {makeStyles,Button,withStyles,Grid,TextField,CircularProgress,Typography} from '@material-ui/core'
-import {useState} from 'react'
+import {useEffect,useState} from 'react'
 
 function App() {
   const useStyles = makeStyles({
@@ -52,49 +52,23 @@ function App() {
   const [result,setResult]=useState('');
   const [data,setData]=useState('');
   let myObj={"text":data};
-  const handlechange = e =>{setData(e.target.value)}
-  async function btnhandler(){
-    console.log(myObj);
-    setDisplay(1);
-    try{
-       await fetch('/api',{
-        method:'POST',
-        headers:{
-          'Accept':'application/json',
-          'Content-type':'application/json',
-        },
-        body: JSON.stringify(myObj)
-      }).then(
-        (response)=>response.json()
-      ).then(
-        (responseJson)=>{
-          setResult(responseJson.result);
-          setDisplay(2);
-          console.log(result)}
-      );
-    }catch(e){
-      setDisplay(3)
-      console.log(e)
-    }
-  }
-  async function btnhandler2(){
-    await fetch('http://127.0.0.1:5000/')
-    .then(
-      (res)=>res.json()
-    ).then(
-      (jsonified)=>console.log(jsonified)
-    ).catch(
-      (e)=>(console.log(e))
-    )
-  }
+  const handlechange = e =>{setData(e.target.value)
+    console.log(data)}
+
   const classes = useStyles();
+
+  useEffect(()=>{
+    fetch('/api')
+    .then(response => response.json());
+  },[])
+
   return (
     <Grid className="app-container"
      direction='row'
      justify='space-evenly' 
      spacing={5} 
      container>
-       <Grid justify='center' item xs={12}>
+       <Grid item xs={12}>
        <h1 style={{color:'#f9cec3',marginTop:'0px',width:'100%',textAlign:'center'}}>AGrA</h1>
        </Grid>
 
@@ -108,7 +82,7 @@ function App() {
         
         <br/><br/>
        
-        <CustomButton onClick={()=>{btnhandler2()}} variant='contained' color='primary'>Get Sentiment</CustomButton>
+        <CustomButton variant='contained' color='primary'>Get Sentiment</CustomButton>
         &nbsp;&nbsp;&nbsp;
         <Typography style={{color:'#f9cec3',display:'inline-block',marginLeft:'20px'}}> {display===0?"":display===1? <CircularProgress style={{'color': '#f9cec3'}} size={20}/> :display===2?`${result}`:'SOME VALUES MISSING IN ENTRY'} </Typography>      
 
