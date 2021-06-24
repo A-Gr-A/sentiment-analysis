@@ -1,6 +1,6 @@
 import logo from './assets/phone.svg';
 import './App.css';
-import {makeStyles,Button,withStyles,Grid,TextField,CircularProgress,Typography} from '@material-ui/core'
+import {makeStyles,Button,withStyles,Grid,TextField,Typography} from '@material-ui/core'
 import {useEffect,useState} from 'react'
 
 function App() {
@@ -28,8 +28,7 @@ function App() {
         },
         '&.Mui-focused fieldset': {
           borderColor: '#f9cec3',
-        },
-    
+        },    
       },
       '& .MuiOutlinedInput-input': {
         color:'#f9cec3'      
@@ -48,19 +47,52 @@ function App() {
     }
   }))(Button);
 
-  const [display,setDisplay]=useState(0);
+  // const [display,setDisplay]=useState(0);
   const [result,setResult]=useState('');
   const [data,setData]=useState('');
-  let myObj={"text":data};
-  const handlechange = e =>{setData(e.target.value)
-    console.log(data)}
+  // let myObj={"text":data};
+  const handlechange = e =>{
+    console.log(`typed => ${e.target.value}`)
+    setData(e.target.value)
+  }
 
   const classes = useStyles();
 
   useEffect(()=>{
-    fetch('/api')
-    .then(response => response.json());
+    console.log('App re-rendered');
+    fetch('/api').then(
+      response => response.json()
+    ).then(
+      jsonified => console.log(jsonified)
+    ).catch(
+      e=>console.log(e)
+    )
   },[])
+  
+  async function sendData(){
+    let myObj ={'text':data}
+    try{
+      await fetch('/api',{
+        method:"POST",
+        headers:{
+          'Accept':'application/json',
+          'Content-type':'application/json',
+        },
+        body: JSON.stringify(myObj)
+      })
+      .then(
+        response => response.json()
+      )
+      .then(
+        jsonified =>{ console.log(jsonified)
+        setResult(jsonified['result'])
+        })
+    }
+    catch(e){
+      console.log(e)
+    }
+    
+  }
 
   return (
     <Grid className="app-container"
@@ -82,9 +114,9 @@ function App() {
         
         <br/><br/>
        
-        <CustomButton variant='contained' color='primary'>Get Sentiment</CustomButton>
+        <CustomButton onClick={()=>{sendData()}} variant='contained' color='primary'>Get Sentiment</CustomButton>
         &nbsp;&nbsp;&nbsp;
-        <Typography style={{color:'#f9cec3',display:'inline-block',marginLeft:'20px'}}> {display===0?"":display===1? <CircularProgress style={{'color': '#f9cec3'}} size={20}/> :display===2?`${result}`:'SOME VALUES MISSING IN ENTRY'} </Typography>      
+        <Typography style={{color:'#f9cec3',display:'inline-block',marginLeft:'20px'}}>{result}</Typography>      
 
       </Grid>
 

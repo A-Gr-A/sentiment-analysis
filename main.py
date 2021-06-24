@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,request,json
   
 # Flask constructor takes the name of 
 # current module (__name__) as argument.
@@ -8,17 +8,26 @@ app = Flask(__name__)
 # which tells the application which URL should call 
 # the associated function.
 @app.route('/')
-# ‘/’ URL is bound with hello_world() function.
 def hello_world():
-    return 'Hello World'
-
-@app.route('/api') 
-def api():
     return {
-        'status':'running',
-        'title':'/api',
-        'plsrunlox':3
-    } 
+        'fromurl':'root'
+    }
+
+@app.route('/api',methods=['GET','POST']) 
+def api():
+    if request.method == 'GET':
+        return {
+            'status':'running',
+            'fromurl':'/api',
+            'plsrunlox':3
+        } 
+    else:
+        print(request.json)
+        result = request.json['text'].upper()
+        return {
+            'fromurl':'/api',
+            'result':result
+        }
   
 # main driver function
 if __name__ == '__main__':

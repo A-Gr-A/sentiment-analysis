@@ -1,11 +1,8 @@
+.app-container{
+  background-color:#232530 ;
+}
 .App {
   text-align: center;
-  height: 100%;
-}
-.app-container{
-  background-color: #232530;
-  padding: 20px 20px;
-  height: 100%;
 }
 
 .App-logo {
