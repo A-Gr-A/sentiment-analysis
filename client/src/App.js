@@ -1,6 +1,6 @@
 import logo from './assets/phone.svg';
 import './App.css';
-import {makeStyles,Button,withStyles,Grid,TextField,Typography} from '@material-ui/core'
+import {makeStyles,Button,withStyles,Grid,TextField,Typography,CircularProgress} from '@material-ui/core'
 import {useEffect,useState} from 'react'
 
 function App() {
@@ -47,8 +47,9 @@ function App() {
     }
   }))(Button);
 
-  // const [display,setDisplay]=useState(0);
-  const [result,setResult]=useState('');
+  const [display,setDisplay]=useState(0);
+  const [score,setScore]=useState(0);
+  const [sentiment,setSentiment]=useState(0);
   const [data,setData]=useState('');
   // let myObj={"text":data};
   const handlechange = e =>{
@@ -72,6 +73,7 @@ function App() {
   async function sendData(){
     let myObj ={'text':data}
     try{
+      setDisplay(1)
       await fetch('/api',{
         method:"POST",
         headers:{
@@ -85,10 +87,13 @@ function App() {
       )
       .then(
         jsonified =>{ console.log(jsonified)
-        setResult(jsonified['result'])
+        setDisplay(2)
+        setScore(jsonified['score'])
+        setSentiment(jsonified['sentiment'])
         })
     }
     catch(e){
+      setDisplay(3)
       console.log(e)
     }
     
@@ -116,7 +121,9 @@ function App() {
        
         <CustomButton onClick={()=>{sendData()}} variant='contained' color='primary'>Get Sentiment</CustomButton>
         &nbsp;&nbsp;&nbsp;
-        <Typography style={{color:'#f9cec3',display:'inline-block',marginLeft:'20px'}}>{result}</Typography>      
+        <Typography style={{color:'#f9cec3',display:'inline-block',marginLeft:'20px'}}>
+        {display===0?"":display===1? <CircularProgress style={{'color': '#f9cec3'}} size={20}/> :display===2?`${sentiment}  SCORE : ${score}`:'SOME VALUES MISSING IN ENTRY'}
+        </Typography>      
 
       </Grid>
 

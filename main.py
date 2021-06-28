@@ -1,6 +1,7 @@
 from flask import Flask,request,json
 import pickle
 import joblib
+import numpy as np
 
 import sys
 sys.path.append(".")
@@ -82,20 +83,21 @@ def api():
             'plsrunlox':3
         } 
     else:
-        print(request.json)
-        print(request.json['text'])
+        # print(request.json)
+        # print(request.json['text'])
        
         preprocessed_text = preprocess_raw_text(str(request.json['text']))
-        print(preprocessed_text.shape)
-        print(preprocessed_text)
+        # print(preprocessed_text)
         out_score = final_output_score(preprocessed_text)
         out_sent = final_output_sentiment(preprocessed_text)
+        result = out_sent + " score: " + str(out_score[0]) 
         print(f"{out_score}\n{out_sent}")
 
         
         return {
             'fromurl':'/api',
-            'result':"----"
+            'score': str(out_score[0]),
+            'sentiment': out_sent
         }
   
 # main driver function
